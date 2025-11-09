@@ -12,6 +12,7 @@ RUN apk add --no-cache unzip && \
 
 # Install dependencies
 RUN npm install
+RUN npm install cors
 
 # Build the client
 RUN npm run build
