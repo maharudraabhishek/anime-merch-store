@@ -1,0 +1,8 @@
+{
+  "name": "deploy-wrapper",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "unzip -o anime-portfolio-new.zip -d extracted && cd extracted && npm install && npm run build && npm start"
+  },
+  "dependencies": {}
+}
