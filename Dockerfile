@@ -2,13 +2,13 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY anime-portfolio-new.zip .
+COPY anime-portfolio-new-updated-final.zip .
 
 # Install unzip and extract the zip
 RUN apk add --no-cache unzip && \
-    unzip -o anime-portfolio-new.zip -d extracted && \
+    unzip -o anime-portfolio-new-updated-final.zip -d extracted && \
     mv extracted/* . && \
-    rm -rf anime-portfolio-new.zip extracted
+    rm -rf anime-portfolio-new-updated-final.zip extracted
 # Disable database connection for demo purposes
 ENV DATABASE_URL=
 
