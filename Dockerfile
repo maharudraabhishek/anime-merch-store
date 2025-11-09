@@ -9,6 +9,8 @@ RUN apk add --no-cache unzip && \
     unzip -o anime-portfolio-new.zip -d extracted && \
     mv extracted/* . && \
     rm -rf anime-portfolio-new.zip extracted
+# Disable database connection for demo purposes
+ENV DATABASE_URL=
 
 # Install dependencies
 RUN npm install
