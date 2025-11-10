@@ -6,9 +6,17 @@ COPY anime-portfolio.zip .
 
 # Install unzip and extract the zip
 RUN apk add --no-cache unzip && \
-    unzip -o anime-portfolio.zip -d extracted && \
-    mv extracted/* . && \
+    unzip -q anime-portfolio.zip -d extracted -x "__MACOSX/*" "*/.DS_Store" && \
+    sh -c 'set -e; \
+      cnt=$(ls -1 extracted | wc -l); \
+      if [ "$cnt" = "1" ]; then \
+        dir=$(ls -1 extracted); \
+        mv "extracted/$dir"/* .; \
+      else \
+        mv extracted/* .; \
+      fi' && \
     rm -rf anime-portfolio.zip extracted
+
 # Disable database connection for demo purposes
 ENV DATABASE_URL=
 
