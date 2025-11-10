@@ -1,33 +1,26 @@
-FROM node:20-alpine AS build
+FROM node:18-alpine
+
 WORKDIR /app
-RUN apk add --no-cache unzip
 
-# NOTE: change the zip name to the ACTUAL file in your repo root
-COPY anime-portfolio.zip /app/
+COPY anime-portfolio.zip .
 
-# unzip; handle nested folder inside the zip
-RUN set -eux; \
-    unzip -o /app/anime-portfolio.zip -d /app/extracted; \
-    if [ -f /app/extracted/package.json ]; then \
-      mv /app/extracted/* /app/; \
-    else \
-      inner="$(find /app/extracted -mindepth 1 -maxdepth 1 -type d | head -n1)"; \
-      mv "$inner"/* /app/; \
-    fi; \
-    rm -rf /app/extracted /app/anime-portfolio.zip
+# Install unzip and extract the zip
+RUN apk add --no-cache unzip && \
+    unzip -o anime-portfolio.zip -d extracted && \
+    mv extracted/* . && \
+    rm -rf anime-portfolio.zip extracted
+# Disable database connection for demo purposes
+ENV DATABASE_URL=
 
-# sanity: prove package.json is really in /app now
-RUN echo "== after unzip ==" && ls -la /app | sed -n '1,200p' && test -f /app/package.json
+# Install dependencies
+RUN npm install
+RUN npm install cors
 
-RUN npm ci
-# optional:
-# RUN npm run fetch:assets || true
+# Build the client
 RUN npm run build
 
-FROM node:20-alpine
-WORKDIR /app
-ENV NODE_ENV=production
-COPY --from=build /app /app
-RUN echo "== runtime check ==" && ls -la /app | sed -n '1,200p' && ls -la /app/dist || true
-EXPOSE 8080
+# Expose the port your server will run on
+EXPOSE 3000
+
+# Start the server
 CMD ["npm", "start"]
